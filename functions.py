@@ -3,8 +3,20 @@ import pandas
 import psycopg2
 import os
 
+from bot import bot
 from dotenv import load_dotenv
 from bs4 import BeautifulSoup
+
+channel_id = os.getenv('CHANNEL_ID')
+
+
+async def check_subscribe(user_id: int) -> bool:
+    try:
+        chat_member = await bot.get_chat_member(chat_id=channel_id, user_id=user_id)
+        return chat_member.status in ['member', 'administrator', 'creator']
+    except Exception as e:
+        print(f"Error checking subscription: {e}")
+        return False
 
 
 async def db_connect():
